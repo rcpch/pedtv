@@ -2,8 +2,13 @@ version: "3"
 
 # Uses https://github.com/nginx-proxy/acme-companion
 
+x-global-environment: &global
+  env_file:
+    - ./envs/.env # env file - NOT committed to Git
+
 services:
   nginx-proxy:
+    <<: *global # this will inherit all the envs from x-global-environment
     image: nginxproxy/nginx-proxy
     container_name: nginx-proxy
     ports:
@@ -19,6 +24,7 @@ services:
       - ./deploy/docker/reverse_proxy/client_max_body_size.conf:/etc/nginx/conf.d/client_max_body_size.conf:ro
 
   acme-companion:
+    <<: *global # this will inherit all the envs from x-global-environment
     image: nginxproxy/acme-companion
     container_name: nginx-proxy-acme
     volumes_from:
@@ -29,6 +35,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
 
   migrations:
+    # <<: *global # this will inherit all the envs from x-global-environment
     image: mediacms/mediacms:latest
     volumes:
       - ./:/home/mediacms.io/mediacms/
@@ -38,9 +45,12 @@ services:
       ENABLE_CELERY_SHORT: 'no'
       ENABLE_CELERY_LONG: 'no'
       ENABLE_CELERY_BEAT: 'no'
-      ADMIN_USER: 'admin'
-      ADMIN_EMAIL: 'admin@localhost'
-      #ADMIN_PASSWORD: 'uncomment_and_set_password_here'
+      # ADMIN_USER: <from .env>
+      # ADMIN_EMAIL: <from .env>
+      # ADMIN_PASSWORD: <from .env>
+      POSTGRES_USER: mediacms
+      POSTGRES_PASSWORD: mediacms
+      POSTGRES_DB: mediacms
     command: "./deploy/docker/prestart.sh"
     restart: on-failure
     depends_on:
@@ -48,7 +58,9 @@ services:
         condition: service_healthy
       db:
         condition: service_healthy
+  
   web:
+    <<: *global # this will inherit all the envs from x-global-environment
     image: mediacms/mediacms:latest
     deploy:
       replicas: 1
@@ -59,12 +71,14 @@ services:
       ENABLE_CELERY_SHORT: 'no'
       ENABLE_CELERY_LONG: 'no'
       ENABLE_MIGRATIONS: 'no'
-      VIRTUAL_HOST: 'mediacms.52.209.5.113.nip.io'
-      LETSENCRYPT_HOST: 'mediacms.52.209.5.113.nip.io'
-      LETSENCRYPT_EMAIL: 'email@example.com'
+      # VIRTUAL_HOST: <from .env>
+      # LETSENCRYPT_HOST: <from .env>
+      # LETSENCRYPT_EMAIL: <from .env>
     depends_on:
       - migrations
+  
   celery_beat:
+    <<: *global # this will inherit all the envs from x-global-environment
     image: mediacms/mediacms:latest
     volumes:
       - ./:/home/mediacms.io/mediacms/
@@ -76,7 +90,9 @@ services:
       ENABLE_MIGRATIONS: 'no'
     depends_on:
       - redis
+  
   celery_worker:
+    <<: *global # this will inherit all the envs from x-global-environment
     image: mediacms/mediacms:latest
     deploy:
       replicas: 1
@@ -89,7 +105,9 @@ services:
       ENABLE_MIGRATIONS: 'no'
     depends_on:
       - migrations
+  
   db:
+    <<: *global # this will inherit all the envs from x-global-environment
     image: postgres:17.2-alpine
     volumes:
       - ../postgres_data:/var/lib/postgresql/data/
@@ -104,7 +122,9 @@ services:
       interval: 30s
       timeout: 10s
       retries: 5
+  
   redis:
+    <<: *global # this will inherit all the envs from x-global-environment
     image: "redis:alpine"
     restart: always
     healthcheck:
@@ -112,6 +132,7 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
+  
 volumes:
   conf:
   vhost:
