@@ -33,3 +33,26 @@ CELERY_RESULT_BACKEND = BROKER_URL
 MP4HLS_COMMAND = "/home/mediacms.io/bento4/bin/mp4hls"
 
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
+
+# pedtv customisations
+# https://github.com/mediacms-io/mediacms/blob/main/docs/admins_docs.md#5-configuration
+
+CAN_ADD_MEDIA = "advancedUser"
+
+# Uploaded videos can only be seen by registered users
+PORTAL_WORKFLOW = "private"
+
+# Just hides the register button
+REGISTER_ALLOWED = False
+
+CAN_LIKE_MEDIA = False
+CAN_DISLIKE_MEDIA = False
+CAN_REPORT_MEDIA = False
+CAN_SHARE_MEDIA = True
+
+MEDIA_IS_REVIEWED = True
+
+USERS_CAN_SELF_REGISTER = False
+
+CAN_COMMENT = "advancedUser"
+
