@@ -37,6 +37,8 @@ DEBUG = os.getenv('DEBUG', 'False') == 'True'
 # pedtv customisations
 # https://github.com/mediacms-io/mediacms/blob/main/docs/admins_docs.md#5-configuration
 
+PORTAL_NAME = "PED-TV"
+
 CAN_ADD_MEDIA = "advancedUser"
 
 # Uploaded videos can only be seen by registered users
