@@ -61,7 +61,7 @@ services:
     volumes:
       - ./:/home/mediacms.io/mediacms/
     env_file:
-      - ./envs/.migrations.env # not committed to Git
+      - ./envs/.web.env # not committed to Git
     environment:
       ENABLE_CELERY_BEAT: 'no'
       ENABLE_CELERY_SHORT: 'no'
