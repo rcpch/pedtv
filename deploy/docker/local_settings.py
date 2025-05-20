@@ -56,3 +56,20 @@ USERS_CAN_SELF_REGISTER = False
 
 CAN_COMMENT = "advancedUser"
 
+DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", "pedtv@localhost")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "xyz")
+EMAIL_HOST = os.environ.get("EMAIL_HOST", "localhost")
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "pedtv@localhost") 
+EMAIL_USE_TLS = True
+SERVER_EMAIL = DEFAULT_FROM_EMAIL
+EMAIL_HOST = os.environ.get("EMAIL_HOST", "pedtv.localhost")
+EMAIL_PORT = os.environ.get("EMAIL_PORT", 587)
+
+ADMIN_EMAIL_LIST = os.environ.get("ADMIN_EMAIL_LIST", [])
+if ADMIN_EMAIL_LIST:
+    ADMIN_EMAIL_LIST = [e.strip() for e in  ADMIN_EMAIL_LIST.split(",")]
+
+# Django admins (error notifications)
+ADMINS = os.environ.get("ADMINS", '')
+if ADMINS:
+    ADMINS = [e.split(":") for e in  ADMINS.split(",")]
