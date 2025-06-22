@@ -449,21 +449,25 @@ DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 LANGUAGES = [
     ('ar', _('Arabic')),
     ('bn', _('Bengali')),
+    ('da', _('Danish')),
     ('nl', _('Dutch')),
     ('en', _('English')),
     ('fr', _('French')),
     ('de', _('German')),
     ('hi', _('Hindi')),
     ('id', _('Indonesian')),
+    ('it', _('Italian')),
     ('ja', _('Japanese')),
     ('ko', _('Korean')),
     ('pt', _('Portuguese')),
     ('ru', _('Russian')),
     ('zh-hans', _('Simplified Chinese')),
+    ('zh-hant', _('Traditional Chinese')),
     ('es', _('Spanish')),
     ('tr', _('Turkish')),
     ('el', _('Greek')),
     ('ur', _('Urdu')),
+    ('he', _('Hebrew')),
 ]
 
 LANGUAGE_CODE = 'en'  # default language
@@ -492,7 +496,9 @@ USE_RBAC = False
 USE_IDENTITY_PROVIDERS = False
 JAZZMIN_UI_TWEAKS = {"theme": "flatly"}
 
+USE_ROUNDED_CORNERS = True
 
+ALLOW_VIDEO_TRIMMER = True
 try:
     # keep a local_settings.py file for local overrides
     from .local_settings import *  # noqa
@@ -502,6 +508,8 @@ try:
 except ImportError:
     # local_settings not in use
     pass
+
+# Don't add new settings below that could be overridden in local_settings.py!!!
 
 if "http" not in FRONTEND_HOST:
     # FRONTEND_HOST needs a http:// preffix
