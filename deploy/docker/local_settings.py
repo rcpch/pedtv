@@ -67,6 +67,9 @@ SERVER_EMAIL = DEFAULT_FROM_EMAIL
 EMAIL_HOST = os.environ.get("EMAIL_HOST", "pedtv.localhost")
 EMAIL_PORT = os.environ.get("EMAIL_PORT", 587)
 
+# Disable Celery email sending until we work out why it's not working
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+
 ADMIN_EMAIL_LIST = os.environ.get("ADMIN_EMAIL_LIST", [])
 if ADMIN_EMAIL_LIST:
     ADMIN_EMAIL_LIST = [e.strip() for e in  ADMIN_EMAIL_LIST.split(",")]
