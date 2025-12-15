@@ -1,3 +1,5 @@
+from django.conf import settings
+from django.db.models import Q
 from drf_yasg import openapi as openapi
 from drf_yasg.utils import swagger_auto_schema
 from rest_framework import status
@@ -46,6 +48,7 @@ class MediaList(APIView):
 
         featured = params.get("featured", "").strip()
         is_reviewed = params.get("is_reviewed", "").strip()
+        category = params.get("category", "").strip()
 
         sort_by_options = [
             "title",
@@ -97,6 +100,9 @@ class MediaList(APIView):
             qs = qs.filter(featured=featured)
         if is_reviewed != "all":
             qs = qs.filter(is_reviewed=is_reviewed)
+
+        if category:
+            qs = qs.filter(category__title__contains=category)
 
         media = qs.order_by(f"{ordering}{sort_by}")
 
@@ -214,6 +220,13 @@ class UserList(APIView):
             qs = qs.filter(is_manager=True)
         elif role == "editor":
             qs = qs.filter(is_editor=True)
+
+        if settings.USERS_NEEDS_TO_BE_APPROVED:
+            is_approved = request.GET.get("is_approved")
+            if is_approved == "true":
+                qs = qs.filter(is_approved=True)
+            elif is_approved == "false":
+                qs = qs.filter(Q(is_approved=False) | Q(is_approved__isnull=True))
 
         users = qs.order_by(f"{ordering}{sort_by}")
 

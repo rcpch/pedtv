@@ -3,6 +3,7 @@ from django.conf import settings
 from django.contrib import admin
 from django.core.exceptions import ValidationError
 from django.db import transaction
+from tinymce.widgets import TinyMCE
 
 from rbac.models import RBACGroup
 
@@ -13,8 +14,11 @@ from .models import (
     Encoding,
     Language,
     Media,
+    Page,
     Subtitle,
     Tag,
+    TinyMCEMedia,
+    TranscriptionRequest,
     VideoTrimRequest,
 )
 
@@ -197,11 +201,18 @@ class LanguageAdmin(admin.ModelAdmin):
 
 
 class SubtitleAdmin(admin.ModelAdmin):
-    pass
+    list_display = ["id", "language", "media"]
+    list_filter = ["language"]
+    search_fields = ["media__title"]
+    readonly_fields = ("media", "user")
 
 
 class VideoTrimRequestAdmin(admin.ModelAdmin):
-    pass
+    list_display = ["media", "status", "add_date", "video_action", "media_trim_style", "timestamps"]
+    list_filter = ["status", "video_action", "media_trim_style", "add_date"]
+    search_fields = ["media__title"]
+    readonly_fields = ("add_date",)
+    ordering = ("-add_date",)
 
 
 class EncodingAdmin(admin.ModelAdmin):
@@ -219,14 +230,51 @@ class EncodingAdmin(admin.ModelAdmin):
     has_file.short_description = "Has file"
 
 
+class TranscriptionRequestAdmin(admin.ModelAdmin):
+    list_display = ["media", "add_date", "status", "translate_to_english"]
+    list_filter = ["status", "translate_to_english", "add_date"]
+    search_fields = ["media__title"]
+    readonly_fields = ("add_date", "logs")
+    ordering = ("-add_date",)
+
+
+class PageAdminForm(forms.ModelForm):
+    description = forms.CharField(widget=TinyMCE())
+
+    def clean_description(self):
+        content = self.cleaned_data['description']
+        # Add sandbox attribute to all iframes
+        content = content.replace('<iframe ', '<iframe sandbox="allow-scripts allow-same-origin allow-presentation" ')
+        return content
+
+    class Meta:
+        model = Page
+        fields = "__all__"
+
+
+class PageAdmin(admin.ModelAdmin):
+    form = PageAdminForm
+
+
+@admin.register(TinyMCEMedia)
+class TinyMCEMediaAdmin(admin.ModelAdmin):
+    list_display = ['original_filename', 'file_type', 'uploaded_at', 'user']
+    list_filter = ['file_type', 'uploaded_at']
+    search_fields = ['original_filename']
+    readonly_fields = ['uploaded_at']
+    date_hierarchy = 'uploaded_at'
+
+
 admin.site.register(EncodeProfile, EncodeProfileAdmin)
 admin.site.register(Comment, CommentAdmin)
 admin.site.register(Media, MediaAdmin)
 admin.site.register(Encoding, EncodingAdmin)
 admin.site.register(Category, CategoryAdmin)
+admin.site.register(Page, PageAdmin)
 admin.site.register(Tag, TagAdmin)
 admin.site.register(Subtitle, SubtitleAdmin)
 admin.site.register(Language, LanguageAdmin)
 admin.site.register(VideoTrimRequest, VideoTrimRequestAdmin)
+admin.site.register(TranscriptionRequest, TranscriptionRequestAdmin)
 
 Media._meta.app_config.verbose_name = "Media"
