@@ -45,6 +45,7 @@ services:
     command: "python manage.py runserver 0.0.0.0:80"
     environment:
       DEVELOPMENT_MODE: True
+      SECRET_KEY: 'reallyverysecret'
     ports:
       - "80:80"
     volumes:
@@ -54,7 +55,7 @@ services:
   db:
     image: postgres:17.2-alpine
     volumes:
-      - ../postgres_data:/var/lib/postgresql/data/
+      - pedtv_postgres_data:/var/lib/postgresql/data/
     restart: always
     environment:
       POSTGRES_USER: mediacms
@@ -87,3 +88,6 @@ services:
       ENABLE_MIGRATIONS: 'no'
     depends_on:
       - web
+
+volumes:
+  pedtv_postgres_data: {}
