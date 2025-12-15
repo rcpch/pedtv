@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load i18n %}
+{% load static %}
 
 {% block headtitle %}About - {{PORTAL_NAME}}{% endblock headtitle %}
 
@@ -43,10 +44,26 @@
 
 <div class="custom-page-wrapper">
 	{% comment %}<h2>{{ "About" | custom_translate:LANGUAGE_CODE}}</h2>{% endcomment %}
-	<h2>MediaCMS {{VERSION}}</h2>
+	<h2>PED-TV</h2>
 	<hr/>
-
-    <p><a href="https://mediacms.io">MediaCMS</a> {{ "is a modern, fully featured open source video and media CMS. It is developed to meet the needs of modern web platforms for viewing and sharing media" | custom_translate:LANGUAGE_CODE}}.</p>
+	<img src="{% static 'images/PED-TV_banner.jpg' %}" alt="PED-TV Logo" />
+	<div class="empty-media">
+		<div style="text-align: left;">
+			<p>
+				PED-TV is a population health initiative to improve the health and wellbeing of local children and their families,
+				by streaming educational content and signposting to local and national resources.
+			<p>
+				All resources on PED-TV have been shared with the permission of the owner, organisation or charity, with the intent that it is displayed in health care settings,
+				such as emergency departments, outpatient departments or hospital wards.
+			</p>
+			<p>
+				All content has been vetted by the PED-TV team at Royal Manchester Children's Hospital, and is reviewed annually. If there are any comments, suggestions or feedback please direct it to <a href="mailto:Noellie.Mottershead@mft.nhs.uk">Noellie.Mottershead@mft.nhs.uk</a>
+			</p>
+		</div>
+		<div>
+			<a href="/playlists/5Un2I3f2N" class="button-link">GO TO THE PLAYLIST</a>
+		</div>
+	</div>
 </div>
 
 {% endblock %}
