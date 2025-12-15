@@ -493,7 +493,8 @@ def index(request):
     """Index view"""
 
     context = {}
-    return render(request, "cms/index.html", context)
+    # [mbarton pedtv] lazy patch
+    return render(request, "cms/about.html", context)
 
 
 def latest_media(request):
